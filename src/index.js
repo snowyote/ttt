@@ -1,3 +1,5 @@
+/* @flow */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -23,23 +25,31 @@ function calculateWinner(squares) {
   ];
   for (let i=0; i<lines.length; ++i) {
     const [a, b, c] = lines[i];
-    if (squares[a] == squares[b] && squares[a] == squares[c]) {
+    if (squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
   return null;
 }
 
-class Board extends React.Component {
+
+type Player = 'X' | 'O';
+type BoardProps = {};
+type BoardState = {
+  squares: Array<Player>,
+  xIsNext: boolean,
+};
+
+class Board extends React.Component<BoardProps, BoardState> {
   constructor() {
     super();
     this.state = {
       squares: Array(9).fill(null),
       xIsNext: true,
-    }
+    };
   }
 
-  renderSquare(i) {
+  renderSquare(i: number) {
     return (
       <Square value={this.state.squares[i]}
         onClick={() => this.handleClick(i)}
@@ -55,7 +65,7 @@ class Board extends React.Component {
     this.setState({squares:squares, xIsNext:!this.state.xIsNext});
   }
 
-  nextPlayer() {
+  nextPlayer(): Player {
     return this.state.xIsNext ? 'X' : 'O';
   }
 
@@ -91,7 +101,10 @@ class Board extends React.Component {
   }
 }
 
-class Game extends React.Component {
+type GameProps = {};
+type GameState = {};
+
+class Game extends React.Component<GameProps, GameState> {
   render() {
     return (
       <div className="game">

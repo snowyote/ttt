@@ -12,6 +12,14 @@ function Square(props) {
   );
 }
 
+function copySquares(squares: Squares): Squares {
+  return [
+    squares[0], squares[1], squares[2],
+    squares[3], squares[4], squares[5],
+    squares[6], squares[7], squares[8],
+  ];
+}
+
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -34,9 +42,11 @@ function calculateWinner(squares) {
 
 
 type Player = 'X' | 'O';
+type Squares = [?Player, ?Player, ?Player, ?Player, ?Player, ?Player, ?Player, ?Player, ?Player];
+type BoardIndex = 0|1|2|3|4|5|6|7|8;
 type BoardProps = {};
 type BoardState = {
-  squares: Array<Player>,
+  squares: Squares;
   xIsNext: boolean,
 };
 
@@ -44,12 +54,12 @@ class Board extends React.Component<BoardProps, BoardState> {
   constructor() {
     super();
     this.state = {
-      squares: Array(9).fill(null),
+      squares: [null, null, null, null, null, null, null, null, null],
       xIsNext: true,
     };
   }
 
-  renderSquare(i: number) {
+  renderSquare(i: BoardIndex) {
     return (
       <Square value={this.state.squares[i]}
         onClick={() => this.handleClick(i)}
@@ -57,10 +67,10 @@ class Board extends React.Component<BoardProps, BoardState> {
     );
   }
 
-  handleClick(i) {
+  handleClick(i: BoardIndex) {
     if (calculateWinner(this.state.squares)) return;
     if (this.state.squares[i]) return;
-    let squares = this.state.squares.slice();
+    let squares = copySquares(this.state.squares);
     squares[i] = this.nextPlayer();
     this.setState({squares:squares, xIsNext:!this.state.xIsNext});
   }
